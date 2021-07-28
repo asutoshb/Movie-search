@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        #cont{
+            width: 60%;
+            height: 400px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            
+        }
+        #cont div:nth-child(2)
+        {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            height: 350px;
+            border-radius: 10px;
+            margin: auto;
+            justify-content:  center;
+            align-items: center;
+             margin-top: 25px;
+        }
+        #cont div:nth-child(1)
+        {
+            height: 50px;
+            margin: auto;
+           
+        }
+        #movie{
+            width: 200px;
+            height: 60px;
+            border-radius: 10px;
+            
+        }
+         #btn{
+            width: 100px;
+            height: 60px;
+            border-radius: 10px;
+            background-color: rgb(205, 81, 50);
+            color: white;
+        }
+        h1{
+            text-align: center;
+        }
+        
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Movie Search Engine</h1> 
+    <div id="cont">   
+        <div>
+            <input type="text" id="movie" placeholder="Type movie name">
+            <button onclick="getMovie()" id="btn">Search</button>
+        </div>
+        <div id="show">
+
+        </div>
+       
+    </div>
+    
+</body>
+
+</html>
+
+<script>
+
+    async function getMovie() {
+        let movie = document.getElementById("movie").value;
+        let show = document.getElementById("show");
+
+        try {
+            let res = await fetch(`http://www.omdbapi.com/?t=${movie}&apikey=e1507164`);
+
+            let data = await res.json();
+
+            let Released = document.createElement("span");
+            let Title = document.createElement("span");
+            let Rated = document.createElement("span");
+            let Runtime = document.createElement("span");
+            let imdbRating = document.createElement("span");
+
+            let recom = document.createElement("span");
+            recom.innerHTML = "Recommened";
+            recom.style.backgroundColor = "yellow";
+
+
+            let img = document.createElement("img");
+
+            if(data.Response == 'False')
+            {
+                show.innerHTML = null;
+                img.src = "https://media1.giphy.com/media/8L0Pky6C83SzkzU55a/giphy.gif";
+                img.style.width = "100%";
+                img.style.height = "100%";
+                show.append(img)
+            }
+            else
+            {
+                show.innerHTML = null;
+                img.src = data.Poster;
+                img.style.width = "80%";
+                img.style.height = "70%";
+
+                Released.innerHTML = data.Released;
+                Title.innerHTML = data.Title;
+                Rated.innerHTML = data.Rated;
+                Runtime.innerHTML = data.Runtime;
+                imdbRating.innerHTML = data.imdbRating;
+                if(Number(imdbRating.innerHTML) > 8.5)
+                {
+                    show.append(img, Title, Rated, Released, Runtime, imdbRating, recom);
+                }
+                else
+                {
+                    show.append(img, Title, Rated, Released, Runtime, imdbRating);
+                }
+                
+                console.log(data)
+            }
+
+            
+        }
+        catch (err) {
+          console.log(err);
+        }
+
+    }
+
+</script>
